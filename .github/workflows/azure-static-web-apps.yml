@@ -18,9 +18,23 @@ jobs:
       - uses: actions/checkout@v4
         with:
           submodules: true
-      - name: Build and Deploy
-        id: builddeploy
-        uses: Azure/static-web-apps-deploy@v1
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 12
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm run build
         env:
           VITE_KEYGEN_HOST: keygenapi.visuelconcept.com
           VITE_KEYGEN_VERSION: "1.8"
@@ -28,12 +42,17 @@ jobs:
           VITE_KEYGEN_EDITION: CE
           VITE_KEYGEN_MODE: singleplayer
           VITE_KEYGEN_SUPPORT_EMAIL: support@visuelconcept.com
+
+      - name: Deploy
+        id: builddeploy
+        uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
           app_location: "/"
           output_location: "dist"
+          skip_app_build: true
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
