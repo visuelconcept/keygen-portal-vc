@@ -4,9 +4,10 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --font-owners-wide: "Owners Wide", sans-serif;
-  --font-owners-text: "Owners Text", sans-serif;
-
+/* --font-owners-wide: "Owners Wide", sans-serif; */
+--font-owners-wide: "Inter", sans-serif;
+/* --font-owners-text: "Owners Text", sans-serif; */
+--font-owners-text: "Inter", sans-serif;
   --breakpoint-md: 60rem;
 }
 
